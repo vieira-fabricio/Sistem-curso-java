@@ -23,7 +23,7 @@ public class User {
 	String name;
 	@Column(name = "nome_usuario")
 	@NotBlank(message = "Username")
-	@Length(min = 3, max = 10, message = "Username")
+	@Length(min = 3, max = 20, message = "Username")
 	String userName;
 	
 	public Integer getId() {

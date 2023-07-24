@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -49,9 +50,10 @@ public class UserController {
 	*/
 
 	@PostMapping("/")
-	public User salvar(@Valid @RequestBody User usuario) {
+	public ResponseEntity<User> salvar(@Valid @RequestBody User usuario) {
 		
-		return this.userRepository.save(usuario);
+		User usuarioSalvo = userService.salvar(usuario);
+		return ResponseEntity.status(HttpStatus.CREATED).body(usuarioSalvo);
 	}
 
 
@@ -71,7 +73,7 @@ public class UserController {
     }
 
 	 @GetMapping("/findByName/{name}")
-	 public List<User> listMoreThanList(@PathVariable("name") String name) {
+	 public User listMoreThanList(@PathVariable("name") String name) {
 		
 		return this.userRepository.findByNameIgnoreCase(name);
 	}

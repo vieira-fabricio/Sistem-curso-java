@@ -9,5 +9,6 @@ import br.com.springboot.springboot.model.User;
 public interface UserRepository extends JpaRepository <User, Integer>{
 
     public List<User> findByIdGreaterThan(Integer id);
-    public List<User> findByNameIgnoreCase(String name);
+    public User findByNameIgnoreCase(String name);
+    public User findByNameAndUserName(String name, String UserName);
 }

@@ -1,8 +1,10 @@
 package br.com.springboot.springboot.exception;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -11,6 +13,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
@@ -28,7 +31,27 @@ public class ExceptionHandle extends ResponseEntityExceptionHandler {
 
 		return super.handleExceptionInternal(ex, erros, headers, HttpStatus.BAD_REQUEST, request);
 	}
-
+	
+	@ExceptionHandler(EmptyResultDataAccessException.class)
+	public ResponseEntity<Object> handleEmptyResultDataAccessException(EmptyResultDataAccessException ex, WebRequest request) {
+		
+		String msgUser = "Recurso não encontrado!";
+		String msgDev = ex.toString();
+		List<Error> erros = Arrays.asList(new Error(msgUser, msgDev));
+		
+		return handleExceptionInternal(ex, erros, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
+	}
+	
+	@ExceptionHandler(RegraNegocioExecption.class)
+	public ResponseEntity<Object> handleRegraNegocioExecption(RegraNegocioExecption ex, WebRequest request) {
+		 
+		String msgUser = ex.getMessage();
+		String msgDev = ex.getMessage();
+		List<Error> erros = Arrays.asList(new Error(msgUser, msgDev));
+		
+		return handleExceptionInternal(ex, erros, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+	}
+	
 	private List<Error> gerarListaDeErros(BindingResult bindingResult) {
 
 		List<Error> erros = new ArrayList<Error>();
