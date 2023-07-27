@@ -3,6 +3,8 @@ package br.com.springboot.springboot.model;
 
 import java.util.List;
 
+import org.hibernate.validator.constraints.Length;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -12,6 +14,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
 
 
 @Entity
@@ -22,8 +25,12 @@ public class Aluno {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @Column(name = "nome")
+    @NotBlank(message = "Nome")
+    @Length(min = 3, max = 50, message = "Nome")
     private String name;
     @Column(name="cpf")
+    @NotBlank(message = "CPF")
+    @Length(min = 11, max = 11, message = "CPF")
     private String cpf;
     
     @ManyToMany

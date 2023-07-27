@@ -1,9 +1,12 @@
 package br.com.springboot.springboot.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import java.util.List;
+import java.util.Optional;
 
-import br.com.springboot.springboot.dto.NovoAluno;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.stereotype.Service;
 import br.com.springboot.springboot.model.Aluno;
 import br.com.springboot.springboot.repository.AlunoRepository;
 
@@ -12,13 +15,41 @@ public class AlunoService {
 
 	@Autowired
 	private AlunoRepository alunoRepository;
-	public void save(NovoAluno novoAluno) {
-		Aluno aluno = new Aluno();
-		aluno.setCpf(novoAluno.getCpf());
-		aluno.setName(novoAluno.getName());
+	
+	public Aluno salvar(Aluno novoAluno) {
+			
+		return alunoRepository.save(novoAluno);	
+	}
+	
+	public List<Aluno> listarTodos() {
 		
+		return alunoRepository.findAll();
+	}
+	
+	public Optional<Aluno> buscarPorId(Integer id) {
 		
-		alunoRepository.save(aluno);
+		return alunoRepository.findById(id);
+	}
+	
+	public Aluno atualizar(Integer id, Aluno aluno) {
 		
+		Aluno alunoExistente = validarAlunoExiste(id);
+		BeanUtils.copyProperties(aluno, alunoExistente, "id");
+		
+		return alunoRepository.save(alunoExistente);
+	}
+
+	private Aluno validarAlunoExiste(Integer id) {
+		
+		Optional<Aluno> aluno = buscarPorId(id);
+		if(aluno.isEmpty()) {
+			throw new EmptyResultDataAccessException(1);
+		}
+		return aluno.get();
+	}
+	
+	public void deletar(Integer id) {
+		
+		alunoRepository.deleteById(id);
 	}
 }

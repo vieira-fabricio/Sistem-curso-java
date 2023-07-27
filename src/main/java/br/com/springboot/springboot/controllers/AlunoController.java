@@ -14,34 +14,34 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.springboot.springboot.model.Aluno;
 import br.com.springboot.springboot.repository.AlunoRepository;
+import br.com.springboot.springboot.service.AlunoService;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/alunos")
 public class AlunoController {
     @Autowired
     private AlunoRepository alunoRepository;
+    
+    @Autowired
+    private AlunoService alunoService;
 
     @GetMapping("/{id}")
-    public Aluno aluno(@PathVariable("id") Integer id){
-
-        Optional<Aluno> alunoFind = this.alunoRepository.findById(id);
-        
-        if(alunoFind.isPresent()) {
-			return alunoFind.get();
-		}
-		return null;
+    public Optional<Aluno> buscarPorId(@PathVariable("id") Integer id){
+ 
+		return alunoService.buscarPorId(id);
     }
 
     @PostMapping("/")
-    public Aluno aluno(@RequestBody Aluno aluno){
+    public Aluno aluno(@Valid @RequestBody Aluno aluno){
         
-        return this.alunoRepository.save(aluno);
+        return alunoService.salvar(aluno);
     }
 
     @GetMapping("/list")
-	public List<Aluno> list() {
+	public List<Aluno> listarTodos() {
 		
-		return this.alunoRepository.findAll();
+		return alunoService.listarTodos();
 	}
 
     @GetMapping("/findByName/{name}")
