@@ -62,4 +62,9 @@ public class UserService {
 					String.format("O usuário %s já está cadastrado", usuario.getName(), usuario.getUserName()));
 		}
 	}
+	
+	public String buscarPeloNome(String name) {	
+		
+		return name;
+	}
 }

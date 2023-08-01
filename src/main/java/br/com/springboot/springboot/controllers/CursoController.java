@@ -4,55 +4,68 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.springboot.springboot.model.Curso;
-import br.com.springboot.springboot.repository.CursoRepository;
+import br.com.springboot.springboot.service.CursoService;
 
 @RestController
 @RequestMapping("/cursos")
 public class CursoController {
 	
+
 	@Autowired
-	private CursoRepository cursoRepository;
+	private CursoService cursoService;
 	
 	@GetMapping("/{id}")
-	public Curso curso(@PathVariable("id") Integer id) {
+	public ResponseEntity<Optional<Curso>> buscarPeloId(@PathVariable("id") Integer id) {
 		
-		Optional<Curso> cursoFind = this.cursoRepository.findById(id);
+		Optional<Curso> cursoFind = cursoService.buscarPeloId(id);
 		
-		if(cursoFind.isPresent()) {
-			return cursoFind.get();
-		}
-		 return null;	
+		 return cursoFind.isPresent() ? ResponseEntity.ok(cursoFind) : ResponseEntity.notFound().build();	
+	}
+	
+	@GetMapping("/buscarPeloNome/{nome}")
+	public Curso buscarPeloNome(String nome) {
+		
+		return cursoService.buscarPeloNome(nome);
 	}
 	
 	@PostMapping("/")
-	public Curso curso(@RequestBody Curso curso) {
+	public ResponseEntity<Curso> salvar(@RequestBody Curso curso) {
 		
-		return this.cursoRepository.save(curso);
+		Curso cursoSalvo = cursoService.salvar(curso);
+		
+		return ResponseEntity.status(HttpStatus.CREATED).body(cursoSalvo);
 	}
 	
 	@GetMapping("/list")
-	public List<Curso> list() {
+	public List<Curso> listartodos() {
 		
-		return this.cursoRepository.findAll();
+		return this.cursoService.listarTodos();
 	}
 	
 	@DeleteMapping("/{id}")
-	public Curso deletarPeloId(@PathVariable("id") Integer id) {
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void deletar(@PathVariable("id") Integer id) {
 		
-		if(cursoRepository.existsById(id)) {
-			cursoRepository.deleteById(id);
-		}
+		cursoService.deletar(id);
+	}
+	
+	@PutMapping("/{id}")
+	public ResponseEntity<Curso> atualizar(@PathVariable Integer id,  @RequestBody Curso curso) {
 		
-		return null;
+		return ResponseEntity.ok(cursoService.atualizar(id, curso));
 	}
 	
 

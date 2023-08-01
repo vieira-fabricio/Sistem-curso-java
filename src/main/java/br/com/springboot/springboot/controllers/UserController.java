@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.springboot.springboot.model.User;
@@ -64,12 +65,10 @@ public class UserController {
 	} 
 
 	@DeleteMapping("/{id}")
-    public User deletarPeloId(@PathVariable("id") Integer id) {
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deletar(@PathVariable Integer id) {
 
-        if(userRepository.existsById(id)){
-            userRepository.deleteById(id);
-        } 
-        return null;
+        userService.deletar(id);
     }
 
 	 @GetMapping("/findByName/{name}")

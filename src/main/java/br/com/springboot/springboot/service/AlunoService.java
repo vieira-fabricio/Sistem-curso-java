@@ -7,6 +7,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+
+import br.com.springboot.springboot.exception.RegraNegocioExecption;
 import br.com.springboot.springboot.model.Aluno;
 import br.com.springboot.springboot.repository.AlunoRepository;
 
@@ -17,7 +19,7 @@ public class AlunoService {
 	private AlunoRepository alunoRepository;
 	
 	public Aluno salvar(Aluno novoAluno) {
-			
+		validarAlunoDuplicado(novoAluno);
 		return alunoRepository.save(novoAluno);	
 	}
 	
@@ -34,6 +36,7 @@ public class AlunoService {
 	public Aluno atualizar(Integer id, Aluno aluno) {
 		
 		Aluno alunoExistente = validarAlunoExiste(id);
+		validarAlunoDuplicado(aluno);
 		BeanUtils.copyProperties(aluno, alunoExistente, "id");
 		
 		return alunoRepository.save(alunoExistente);
@@ -51,5 +54,20 @@ public class AlunoService {
 	public void deletar(Integer id) {
 		
 		alunoRepository.deleteById(id);
+	}
+	
+	public void validarAlunoDuplicado(Aluno aluno) {
+		
+		Aluno alunoEncontrado = alunoRepository.findByNameAndCpf(aluno.getName(), aluno.getCpf());
+		
+		if(alunoEncontrado != null && alunoEncontrado.getCpf() != aluno.getCpf()) {
+			throw new RegraNegocioExecption(
+				String.format("O aluno %s já está cadastrado", aluno.getName().toUpperCase()));
+		}
+	}
+	
+	public Aluno buscarPeloNome(Aluno aluno) {
+	
+		return null;
 	}
 }
