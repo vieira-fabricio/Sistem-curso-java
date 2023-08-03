@@ -53,6 +53,7 @@ public class CursoService {
 		
 		return cursoRepository.findByNomeIgnoreCase(nome);
 	}
+	
 
 	//Método para validar se o curso já existe!
 	private Curso validarCursoExiste(Integer id) {

@@ -1,13 +1,14 @@
 package br.com.springboot.springboot.model;
 
-import java.util.List;
+import org.hibernate.validator.constraints.Length;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
+
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "table_cursos")
@@ -16,11 +17,13 @@ public class Curso {
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
+	@NotBlank(message = "Nome")
+	@Length(min = 3, max = 20, message = "Nome")
 	private String nome;
+	@NotBlank(message = "Descrição")
+	@Length(min = 3, max = 100, message = "Descrição")
 	private String descricao;
 	
-	@ManyToMany(mappedBy = "curso")
-	private List<Aluno> aluno;
 
 	public Integer getId() {
 		return id;
@@ -46,12 +49,5 @@ public class Curso {
 		this.descricao = descricao;
 	}
 
-	public List<Aluno> getAluno() {
-		return aluno;
-	}
-
-	public void setAluno(List<Aluno> aluno) {
-		this.aluno = aluno;
-	}
 
 }

@@ -4,17 +4,21 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.springboot.springboot.model.Matricula;
-import br.com.springboot.springboot.repository.MatriculaRepository;
+import br.com.springboot.springboot.service.MatriculaService;
+import jakarta.validation.Valid;
 
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
@@ -22,44 +26,45 @@ import br.com.springboot.springboot.repository.MatriculaRepository;
 public class MatriculaController {
     
     @Autowired
-    private MatriculaRepository matriculaRepository;
+    private MatriculaService matriculaService;
 
     @GetMapping("/{id}")
-    public Matricula matricula(@PathVariable("id") Integer id){
+    public ResponseEntity<Optional<Matricula>> BuscarPeloId(@PathVariable("id") Integer id){
 
-        Optional<Matricula> matriculaFind = this.matriculaRepository.findById(id);
+        Optional<Matricula> matriculaFind = matriculaService.buscarPeloId(id);
         
-        if(matriculaFind.isPresent()) {
-			return matriculaFind.get();
-		}
-		return null;
+		return matriculaFind.isPresent() ? ResponseEntity.ok(matriculaFind) : ResponseEntity.notFound().build();
     }
 
     @PostMapping("/")
-    public Matricula matricula(@RequestBody Matricula matricula){
-        
-        return this.matriculaRepository.save(matricula);
+    public ResponseEntity<Matricula> salvar(@Valid @RequestBody Matricula matricula){
+    	
+    	Matricula matriculaSalva = matriculaService.salvar(matricula);
+        return ResponseEntity.status(HttpStatus.CREATED).body(matriculaSalva);
     }
 
     @GetMapping("/list")
-	public List<Matricula> list() {
+	public List<Matricula> listartodas() {
 		
-		return this.matriculaRepository.findAll();
+		return matriculaService.listarTodas();
 	}
-
+	
 	@GetMapping("/findByAluno/{aluno}")
-	public List<Matricula> findByAluno(@PathVariable("aluno") String aluno){
-
-		return this.matriculaRepository.findByAluno(aluno);
+	public List<Matricula> buscarPeloNomeAluno(@PathVariable String aluno) {
+		
+		return matriculaService.buscarPeloNomeAluno(aluno);
 	}
 
     @DeleteMapping("/{id}")
-    public Matricula deletarPeloId(@PathVariable("id") Integer id) {
+    public void deletar(@PathVariable("id") Integer id) {
 
-        if(matriculaRepository.existsById(id)){
-            matriculaRepository.deleteById(id);
-        } 
-        return null;
+       matriculaService.deletar(id);
+    }
+    
+    @PutMapping("/{id}")
+    public ResponseEntity<Matricula> atualizar(@PathVariable Integer id, @RequestBody Matricula matricula) {
+    	
+    	return ResponseEntity.ok(matriculaService.atualizar(id, matricula));
     }
 
 }
