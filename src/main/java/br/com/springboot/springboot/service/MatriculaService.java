@@ -21,10 +21,13 @@ public class MatriculaService {
 	public Matricula salvar(Matricula matricula) {
 		
 		validarMatriculaDuplicada(matricula);
+		validarCursoExiste(matricula);
 		
 		return matriculaRepository.save(matricula);
 	}
 	
+	
+
 	public List<Matricula> listarTodas() {
 		
 		return matriculaRepository.findAll();
@@ -76,4 +79,13 @@ public class MatriculaService {
 		}
 	}
 	
+	private void validarCursoExiste(Matricula matricula) {
+		
+		Matricula cursoExistente = matriculaRepository.findByCurso(matricula.getCurso());
+		if(cursoExistente == null || cursoExistente.getCurso().isEmpty()) {
+			throw new RegraNegocioExecption(
+					String.format("O curso %s não existe", matricula.getCurso()));
+		}
+		
+	}
 }

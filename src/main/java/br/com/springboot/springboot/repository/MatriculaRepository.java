@@ -9,6 +9,7 @@ import br.com.springboot.springboot.model.Matricula;
 public interface MatriculaRepository extends JpaRepository<Matricula, Integer>{
     
     public List<Matricula> findByAluno(String aluno);
+    public Matricula findByCurso(String curso);
     public Matricula findByAlunoAndCurso(String aluno, String curso);
 
 }
