@@ -11,6 +11,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 
 @Entity
@@ -30,6 +31,12 @@ public class Matricula{
     @NotBlank(message = "Curso")
     @Length(min = 3, max = 50, message = "Curso")
     private String curso;
+    
+    @NotNull
+    private Integer id_aluno;
+    
+    @NotNull
+    private Integer id_curso;
    
     
 	public Integer getId() {
@@ -53,6 +60,20 @@ public class Matricula{
 	public void setCurso(String curso) {
 		this.curso = curso;
 	}
+	public int getId_aluno() {
+		return id_aluno;
+	}
+	public void setId_aluno(Integer id_aluno) {
+		this.id_aluno = id_aluno;
+	}
+	public int getId_curso() {
+		return id_curso;
+	}
+	public void setId_curso(Integer id_curso) {
+		this.id_curso = id_curso;
+	}
+	
+	
 	
     
 }

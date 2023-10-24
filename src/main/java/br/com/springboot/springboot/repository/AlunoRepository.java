@@ -11,8 +11,8 @@ public interface AlunoRepository extends JpaRepository<Aluno, Integer>{
     
     public List<Aluno> findByIdGreaterThan(Integer id);
 	public void save(Matricula matricula);
-	public Aluno findByNameIgnoreCase(String name);
-	public Aluno findByNameAndCpf(String name, String cpf);
+	public Aluno findByNomeIgnoreCase(String nome);
+	public Aluno findByNomeAndCpf(String nome, String cpf);
 
 
 }

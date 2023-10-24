@@ -9,7 +9,9 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import br.com.springboot.springboot.exception.RegraNegocioExecption;
+import br.com.springboot.springboot.model.Curso;
 import br.com.springboot.springboot.model.Matricula;
+import br.com.springboot.springboot.repository.CursoRepository;
 import br.com.springboot.springboot.repository.MatriculaRepository;
 
 @Service
@@ -17,11 +19,13 @@ public class MatriculaService {
 	
 	@Autowired
 	private MatriculaRepository matriculaRepository;
+	@Autowired
+	private CursoRepository cursosExistentes;
 	
-	public Matricula salvar(Matricula matricula) {
+	public Matricula salvar(Matricula matricula, Curso curso) {
 		
 		validarMatriculaDuplicada(matricula);
-		validarCursoExiste(matricula);
+		validarCursoExiste(matricula, curso);
 		
 		return matriculaRepository.save(matricula);
 	}
@@ -79,10 +83,19 @@ public class MatriculaService {
 		}
 	}
 	
-	private void validarCursoExiste(Matricula matricula) {
+	
+	private void validarCursoExiste(Matricula matricula, Curso curso) {
 		
-		Matricula cursoExistente = matriculaRepository.findByCurso(matricula.getCurso());
-		if(cursoExistente == null || cursoExistente.getCurso().isEmpty()) {
+		if(matricula == null) {
+			throw new IllegalArgumentException("A matrícula não pode ser nula.");
+		}
+		
+		String cursoNome = matricula.getCurso();
+	    System.out.println("Nome do Curso: " + cursoNome);
+		
+		Curso cursoExistente = cursosExistentes.findByNomeIgnoreCase(curso.getNome());
+		if(cursoExistente == null || cursoExistente.getNome() == null || cursoExistente.getNome().isEmpty()) {
+			System.out.println("Curso Existente: " + cursoExistente);
 			throw new RegraNegocioExecption(
 					String.format("O curso %s não existe", matricula.getCurso()));
 		}

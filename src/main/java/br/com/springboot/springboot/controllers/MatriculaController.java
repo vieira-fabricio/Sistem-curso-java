@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.springboot.springboot.model.Curso;
 import br.com.springboot.springboot.model.Matricula;
 import br.com.springboot.springboot.service.MatriculaService;
 import jakarta.validation.Valid;
@@ -37,9 +38,9 @@ public class MatriculaController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<Matricula> salvar(@Valid @RequestBody Matricula matricula){
+    public ResponseEntity<Matricula> salvar(@Valid @RequestBody Matricula matricula, Curso curso){
     	
-    	Matricula matriculaSalva = matriculaService.salvar(matricula);
+    	Matricula matriculaSalva = matriculaService.salvar(matricula, curso);
         return ResponseEntity.status(HttpStatus.CREATED).body(matriculaSalva);
     }
 

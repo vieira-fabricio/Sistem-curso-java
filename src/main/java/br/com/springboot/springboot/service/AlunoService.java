@@ -58,11 +58,11 @@ public class AlunoService {
 	
 	public void validarAlunoDuplicado(Aluno aluno) {
 		
-		Aluno alunoEncontrado = alunoRepository.findByNameAndCpf(aluno.getName(), aluno.getCpf());
+		Aluno alunoEncontrado = alunoRepository.findByNomeAndCpf(aluno.getNome(), aluno.getCpf());
 		
 		if(alunoEncontrado != null && alunoEncontrado.getCpf() != aluno.getCpf()) {
 			throw new RegraNegocioExecption(
-				String.format("O aluno %s já está cadastrado", aluno.getName().toUpperCase()));
+				String.format("O aluno %s já está cadastrado", aluno.getNome().toUpperCase()));
 		}
 	}
 	

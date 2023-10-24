@@ -47,9 +47,9 @@ public class AlunoController {
 	}
     
     @GetMapping("/findByName/{name}")
-    public Aluno buscarPeloNome(@PathVariable("name") String name) {
+    public Aluno buscarPeloNome(@PathVariable("nome") String nome) {
     	
-    	return alunoRepository.findByNameIgnoreCase(name);
+    	return alunoRepository.findByNomeIgnoreCase(nome);
     }
 
 	@GetMapping("/findByid/{id}")
